@@ -1,5 +1,5 @@
 # BdmDcToPink
-This bot takes in the fragments you have and calculates for the number of coins you need. Also, k, d, n, and r, g, b, m represents the first letter of each wb.
+This bot takes in the fragments you have and calculates for the number of coins you might need to craft a pink gear. Also, k, d, n, and r, g, b, m represents the first letter of each wb.
 
 ## Usage
  - Type !usage in channel to learn how to use it.
