@@ -40,7 +40,12 @@ async def on_message(message):
           frags = []
           try:
               if cmd[1:5] == "wep=":
-                  frags = cmd[5:]
+                  frags = cmd[5:]        
+                  if len(frags) > 0:
+                    frags = frags.strip()
+                  else:
+                    frags = "0 0 0"
+                  print(frags)
                   frags = [int(frag.strip()) for frag in frags.split(" ")]
                   
                   i = len(frags)
@@ -67,6 +72,11 @@ async def on_message(message):
                   
               elif cmd[1:7] == "armor=":
                   frags = cmd[7:]
+                  if len(frags) > 0:
+                    frags = frags.strip()
+                  else:
+                    frags = "0 0 0"
+                  print(frags)
                   frags = [int(frag.strip()) for frag in frags.split(" ")]
                   if(len(frags) > 4):
                     return await channel.send(err_msg)
