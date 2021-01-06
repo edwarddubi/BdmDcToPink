@@ -27,67 +27,74 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if message.author == client.user:
-        return
+      return
     cmd = message.content.lower()
     channel = message.channel
-    err_msg = "<@{0}>, that's an invalid input. Try again.Type !usage for more info.".format(message.author.id)
-    get_prefix = cmd[0]
-    if prefix == get_prefix:
-        total_coins_needed = 0
-        total_frags_owned = 0
-        total_frags_needed = 0
-        frags = []
-        try:
-            if cmd[1:5] == "wep=":
-                frags = cmd[5:]
-                frags = [int(frag.strip()) for frag in frags.split(" ")]
-                i = len(frags)
-                while(i < 3):
-                    frags.append(0)
-                    
-                print("Calculating weapon coins...")
-                for frag_count in frags:
-                  if frag_count < 0:
+    err_msg = "<@{0}>, that's an invalid input. Try again. Type !usage for more info.".format(message.author.id)
+    if len(cmd) > 0:
+      get_prefix = cmd[0]
+      if prefix == get_prefix:
+          total_coins_needed = 0
+          total_frags_owned = 0
+          total_frags_needed = 0
+          frags = []
+          try:
+              if cmd[1:5] == "wep=":
+                  frags = cmd[5:]
+                  frags = [int(frag.strip()) for frag in frags.split(" ")]
+                  
+                  i = len(frags)
+                  if(i > 3):
                     return await channel.send(err_msg)
-                  if frag_count > 900:
-                    frag_count = 900
-                  total_frags_owned+=frag_count
-                
-                total_frags_needed = wep_frags_to_pink - total_frags_owned
-                total_coins_needed = wep_coins_cost * total_frags_needed
-                total_coins_needed = get_coins_with_comma(total_coins_needed)  
-                print("Done calculating coins for weapon.")
-                msg = "<@{0}>, you need {1} black coins to craft your first/next pink weapon.".format(message.author.id, total_coins_needed)
-                await channel.send(msg)
-                
-            elif cmd[1:7] == "armor=":
-                frags = cmd[7:]
-                frags = [int(frag.strip()) for frag in frags.split(" ")]
-                i = 0
-                print("Calculating weapon coins...")
-                while(i < len(frags)):
-                  frag = frags[i]
-                  if frag < 0:
+                  while(i < 3):
+                      frags.append(0)
+                      i+=1
+                      
+                  print("Calculating weapon coins...")
+                  for frag_count in frags:
+                    if frag_count < 0:
+                      return await channel.send(err_msg)
+                    if frag_count > 900:
+                      frag_count = 900
+                    total_frags_owned+=frag_count
+                  
+                  total_frags_needed = wep_frags_to_pink - total_frags_owned
+                  total_coins_needed = wep_coins_cost * total_frags_needed
+                  total_coins_needed = get_coins_with_comma(total_coins_needed)  
+                  print("Done calculating coins for weapon.")
+                  msg = "<@{0}>, you need {1} black coins to craft your first/next pink weapon.".format(message.author.id, total_coins_needed)
+                  await channel.send(msg)
+                  
+              elif cmd[1:7] == "armor=":
+                  frags = cmd[7:]
+                  frags = [int(frag.strip()) for frag in frags.split(" ")]
+                  if(len(frags) > 4):
                     return await channel.send(err_msg)
-                  if frag > 240:
-                    frag = 240
-                  total_coins_needed+= (240 - frag) * armor_cost[i]
-                  i+=1
-                    
-                total_coins_needed = get_coins_with_comma(total_coins_needed) 
-                print("Done calculating coins for armor.")
-                msg = "<@{0}>, you need {1} black coins to craft your first/next pink armor.".format(message.author.id, total_coins_needed)
-                await channel.send(msg)
+                  i = 0
+                  print("Calculating weapon coins...")
+                  while(i < len(frags)):
+                    frag = frags[i]
+                    if frag < 0:
+                      return await channel.send(err_msg)
+                    if frag > 240:
+                      frag = 240
+                    total_coins_needed+= (240 - frag) * armor_cost[i]
+                    i+=1
+                      
+                  total_coins_needed = get_coins_with_comma(total_coins_needed) 
+                  print("Done calculating coins for armor.")
+                  msg = "<@{0}>, you need {1} black coins to craft your first/next pink armor.".format(message.author.id, total_coins_needed)
+                  await channel.send(msg)
 
-            elif cmd[1:6] == "usage":
-              msg = "This bot takes in the fragments you have and calculates for the number of coins you need. Also, k, d, n, and r, g, b, m represents the first letter of each wb.\nCommands:= (!wep=k d n for weapon or !armor=r g b m for armor coins calculation)."
-              await channel.send(msg)
-                
-            else:
-                return
-        except:
-            return await channel.send(err_msg)
-            
+              elif cmd[1:6] == "usage":
+                msg = "This bot takes in the fragments you have and calculates for the number of coins you might need to craft your pink gear. Also, k, d, n, and r, g, b, m represents the first letter of each wb.\nCommands:= (!wep=k d n for weapon or !armor=r g b m for armor coins calculation)."
+                await channel.send(msg)
+                  
+              else:
+                  return
+          except:
+            await channel.send(err_msg)
+              
         
     
 def get_coins_with_comma(total_coins_needed):
