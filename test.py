@@ -60,8 +60,9 @@ def on_message(message):
                     total_frags_needed = wep_frags_to_pink - total_frags_owned
                     total_coins_needed = wep_coins_cost * total_frags_needed
                     total_coins_needed = get_coins_with_comma(total_coins_needed)  
+                    res = wep_frags_needed(frags)
                     print("Done calculating coins for weapon.")
-                    msg = "<@{0}>, you need {1} black coins to craft your first/next pink weapon.".format(test_name, total_coins_needed)
+                    msg = "<@{0}>, you need {1} black coins to craft your first/next pink weapon.\n{2}".format(test_name, total_coins_needed, res)
                     print(msg)
                     
                 elif cmd[1:7] == is_armor:
@@ -93,7 +94,8 @@ def on_message(message):
                         
                     total_coins_needed = get_coins_with_comma(total_coins_needed) 
                     print("Done calculating coins for armor.")
-                    msg = "<@{0}>, you need {1} black coins to craft your first/next pink armor.".format(test_name, total_coins_needed)
+                    res = armor_frags_needed(frags)
+                    msg = "<@{0}>, you need {1} black coins to craft your first/next pink armor.\n{2}".format(test_name, total_coins_needed, res)
                     print(msg)
                 elif cmd[1:12] == is_pink_hero:
                     frags=cmd[12:]
@@ -152,7 +154,37 @@ def get_coins_with_comma(total_coins_needed):
         i-=1    
     return with_comma
     #print(cmd)
+    
+def wep_frags_needed(frags):
+    max_frag = 900
+    wb = ["k", "d", "n"]
+    res = ""
+    c = 0
+    for frag in frags:
+        if frag > max_frag:
+            frag = max_frag
+        frags_to_obtain = max_frag - frag
+        coins = get_coins_with_comma(frags_to_obtain * wep_coins_cost)
+        
+        res += "{0}: You need {1} frags more. Coins needed to buy exact frags = {2}\n".format(wb[c], frags_to_obtain, coins)
+        c+=1
+    return res
 
+
+def armor_frags_needed(frags):
+    max_frag = 240
+    wb = ["r", "g", "b", "m"]
+    res = ""
+    c = 0
+    for frag in frags:
+        if frag > max_frag:
+            frag = max_frag
+        frags_to_obtain = max_frag - frag
+        coins = get_coins_with_comma(frags_to_obtain * armor_cost[c])
+        
+        res += "{0}: You need {1} frags more. Coins needed to buy exact frags = {2}\n".format(wb[c], frags_to_obtain, coins)
+        c+=1
+    return res
 
 
 on_ready()
